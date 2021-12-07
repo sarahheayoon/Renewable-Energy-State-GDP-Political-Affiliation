@@ -1,0 +1,52 @@
+Rank,state,consumption_Tbtu,index
+1,Vermont,139.20,0.00976
+2,District of Columbia,174.50,0.01224
+3,Rhode Island,197.40,0.01384
+4,Delaware,290.30,0.02036
+5,Hawaii,292.90,0.02054
+6,New Hampshire,324.70,0.02277
+7,Maine,395.30,0.02772
+8,South Dakota,396.80,0.02783
+9,Montana,435.20,0.03052
+10,Idaho,553.30,0.03880
+11,Wyoming,558.60,0.03918
+12,Alaska,609.80,0.04277
+13,North Dakota,661.00,0.04636
+14,New Mexico,702.80,0.04929
+15,Nevada,727.20,0.05100
+16,Connecticut,753.00,0.05281
+17,West Virginia,832.90,0.05841
+18,Utah,835.10,0.05857
+19,Nebraska,914.60,0.06414
+20,Oregon,1012.20,0.07099
+21,Arkansas,1119.70,0.07853
+22,Kansas,1134.50,0.07956
+23,Mississippi,1192.70,0.08365
+24,Maryland,1361.20,0.09546
+25,Massachusetts,1458.60,0.10229
+26,Arizona,1487.80,0.10434
+27,Colorado,1513.30,0.10613
+28,Iowa,1616.10,0.11334
+29,South Carolina,1671.80,0.11725
+30,Oklahoma,1706.50,0.11968
+31,Kentucky,1743.90,0.12230
+32,Missouri,1847.80,0.12959
+33,Wisconsin,1885.90,0.13226
+34,Minnesota,1913.90,0.13423
+35,Alabama,1954.80,0.13709
+36,Washington,2078.70,0.14578
+37,New Jersey,2240.70,0.15715
+38,Tennessee,2255.90,0.15821
+39,Virginia,2401.20,0.16840
+40,North Carolina,2616.10,0.18347
+41,Indiana,2837.60,0.19901
+42,Georgia,2876.10,0.20171
+43,Michigan,2894.20,0.20298
+44,Ohio,3755.90,0.26341
+45,New York,3854.20,0.27030
+46,Pennsylvania,3961.60,0.27784
+47,Illinois,4012.00,0.28137
+48,Florida,4281.30,0.30026
+49,Louisiana,4403.20,0.30881
+50,California,7966.60,0.55871
+51,Texas,14258.80,1.00000
