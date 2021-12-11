@@ -8,10 +8,11 @@ output:
   html_document:
     df_print: paged
 ---
-**ABSTRACT** --- 
+**ABSTRACT: ** 
 This project explores how one sector of the U.S. economy can impact broader economic and societal outcomes. With an increasing focus on the energy production and consumption, as well heightened support for a global transition to renewable energy sources, we focus on how the U.S. energy sector affects high-level variables. We use the source of electricity produced in a state and that state's total energy consumption to predict total state GDP, as well as political affiliation. Here we construct three models to explore these questions. First, we find that total energy consumption and a state's total GDP are highly correlated, suggesting unsurprisingly that wealthier states consume more energy. Second, we construct a model with GDP as a response and electricity production source and total energy consumption as predictors, finding that solar and nuclear are significant predictors, along with total consumption. Finally, we construct a model with percentage of votes in a state going to Republican or Democrat candiates in the U.S. 2020 presidential election as a response, finding that nuclear, coal, natural gas, petroleum, geothermal and wind are significant predictors. We generally conclude that energy can have a moderate level of predictive impact on broader economic and political shifts; however, our modeling is limited by lack of information, collinearity, and nonuniform distributions of electricity generation type in U.S. states. 
 
-**I. INTRODUCTION** --- 
+
+**I. INTRODUCTION**
 
 The objective of this project is to analyze how one sector of the U.S. economy (i.e. energy) can influence broader societal outcomes, such as economic growth and elections. In this case, we are interested in building models based on energy supply (for electricity) in each state, to see what role the energy sector may have on a broader outcome. This report addresses the following questions:
 
@@ -20,15 +21,16 @@ The objective of this project is to analyze how one sector of the U.S. economy (
 (3) In addition to energy production, is total energy consumption a significant predictor for total GDP per state?
 (4) Is electricity production type correlated with state-level political affiliation?
 
-Our project is broken into three components. First, we analyze total GDP with total energy consumption by state as a predictor to see if total energy consumption is relevant to total GDP.
+Our project is broken into three components. First, we analyze total GDP with total energy consumption by state as a predictor to see if total energy consumption is relevant to total GDP. 
 
 Then, we aim to investigate the relationship between energy production source and total energy consumption against and total GDP. This allows us to compare both energy production and comsumption in the context of our societal variables of interest. Our energy data comes from the National Energy Institute, providing the percentage of electricity that is produced in a given state by each source, such as solar, wind, coal, natural gas, etc. Our GDP data comes from Statistia Research Department. 
 
 Finally, we are interested in the relationship between energy production and political affiliation. In this case, we use the percentage of voters who voted Republican vs. Democrat in the 2020 presidential race as a response, and electric energy production types and total energy consumption as predictors. 
 
+
 **II. DATA** --- Describe details about how the data set was collected and the variables in the data set.
 
-Our data consists of four datasets, merged based on the variable of U.S. state:
+Our data consists of four datasets, merged by U.S. state:
 (1) We use total GDP by state in 2020 (in billions of US dollars) with data collected by the Statista Research Department. This is our primary societal-level economic response variable. It is worth noting that GDP is only one metric of general economic trends, comprised of multiple sectors beyond our focus of energy. Additionally, this project does not adjust for the impact on GDP caused by COVID-19 during the 2020 fiscal year. 
 https://www.statista.com/statistics/248023/us-gross-domestic-product-gdp-by-state/
 
@@ -38,7 +40,7 @@ https://www.statista.com/statistics/248023/us-gross-domestic-product-gdp-by-stat
 (3) In addition to energy production, we also explore total energy consumption (in British thermal units) by state in 2018  (the latest this data was avaialable). Although we do not have data for consumption by electricity sector, as in the production dataset, we are still able to explore the distinction between production and consumption. 
 https://neo.ne.gov/programs/stats/inf/120.htm 
 
- (4) To measure political affiliation in the U.S. with one response variable, we use data from the U.S. 2020 presidential election. Here we use data collected by Cook Political Report, exploring percentages of votes in a given state that went to the Republican or Democratic candidate. We do not explore independent candidates because of the small proportion of votes they comprise. We note that percentage of votes for each candidate is only one representation of political affiliation. 
+(4) To measure political affiliation in the U.S. with one response variable, we use data from the U.S. 2020 presidential election. Here we use data collected by Cook Political Report, exploring percentages of votes in a given state that went to the Republican or Democratic candidate. We do not explore independent candidates because of the small proportion of votes they comprise. We note that percentage of votes for each candidate is only one representation of political affiliation. 
  https://www.census.gov/newsroom/press-releases/2021/2020-presidential-election-voting-and-registration-tables-now-available.html 
 
 To efficiently conduct our analysis, we merged these data sets into a single data frame called "fulldata", which we invoke throughout our analysis:
@@ -53,40 +55,38 @@ require(ggplot2)
 require(ggpmisc)
 require(pls)
 fulldata <-read.csv("Project Data/masterdata.csv")
-
-#renaming row names into states
-rownames(fulldata) = fulldata$STATE[c(1:51)] #changing rownames
 ```
 
 * insert basic observations about boxplot of the data *
 
 *Response variables: total GDP & Political Affiliation*:
 ```{r}
-boxplot(fulldata$total_GDP, xlab = "GDP", main = "Boxplot for Total GDP in year 2020")
 boxplot(fulldata$dem_percent, xlab = "Republican percentage", main = "")
 boxplot(fulldata$rep_percent, xlab = "Democrats percentage", main = "")
-
+```
+We might want to consider doing a log transformation of our response variable "total GDP" because there seems to be an extreme outlier for the total GDP (i.e California).
+```{r}
 #plotting total US GDP
-ggplot(data = fulldata, mapping = aes(x = reorder(STATE, total_GDP), y=total_GDP, fill=party)) + 
+ggplot(data = fulldata, mapping = aes(x = reorder(STATE, total_GDP), y=total_GDP, fill=party)) +
+  scale_fill_manual(values=c("#0077b6", "#F8766D"))+
   geom_bar(stat = "identity") + coord_flip()+
   labs(x="STATE", y="2020 Total US GDP (in billions of dollars)")
-  ggtitle("2020 US GDP (in billion $)")
 ```
-
+From the first look, it seems like our response variables and the explanatory variables has some correlations.
 *Explanatory variables ~ total GDP*:
 ```{r}
 # response variable GDP ~ some numerical variables of interest
 plot(total_GDP ~ COAL, fulldata, main = "Scatterplot for GDP ~ COAL")
 abline(lm(total_GDP ~ COAL, fulldata))
 
-plot(total_GDP ~ PETROLEUM, fulldata, main = "Scatterplot for GDP ~ PETROLEUM")
-abline(lm(total_GDP ~ PETROLEUM, fulldata))
-
-plot(total_GDP ~ NUCLEAR, fulldata, main = "Scatterplot for GDP ~ NUCLEAR")
-abline(lm(total_GDP ~ PETROLEUM, fulldata))
-
-plot(total_GDP ~ WIND, fulldata, main = "Scatterplot for GDP ~ WIND")
-abline(lm(total_GDP ~ PETROLEUM, fulldata))
+# plot(total_GDP ~ PETROLEUM, fulldata, main = "Scatterplot for GDP ~ PETROLEUM")
+# abline(lm(total_GDP ~ PETROLEUM, fulldata))
+# 
+# plot(total_GDP ~ NUCLEAR, fulldata, main = "Scatterplot for GDP ~ NUCLEAR")
+# abline(lm(total_GDP ~ PETROLEUM, fulldata))
+# 
+# plot(total_GDP ~ WIND, fulldata, main = "Scatterplot for GDP ~ WIND")
+# abline(lm(total_GDP ~ PETROLEUM, fulldata))
 ```
 *Explanatory variables ~ Political Affiliation*:
 ```{r}
@@ -94,44 +94,41 @@ abline(lm(total_GDP ~ PETROLEUM, fulldata))
 plot(rep_percent ~ COAL, fulldata, main = "Scatterplot for REPUBLICAN VOTES ~ COAL")
 abline(lm(rep_percent ~ COAL, fulldata))
 
-plot(rep_percent ~ PETROLEUM, fulldata, main = "Scatterplot for REPUBLICAN VOTES ~ PETROLEUM")
-abline(lm(rep_percent ~ PETROLEUM, fulldata))
+#plot(rep_percent ~ PETROLEUM, fulldata, main = "Scatterplot for REPUBLICAN VOTES ~ PETROLEUM")
+#abline(lm(rep_percent ~ PETROLEUM, fulldata))
 
-plot(rep_percent ~ NUCLEAR, fulldata, main = "Scatterplot for REPUBLICAN VOTES ~ NUCLEAR")
-abline(lm(rep_percent ~ PETROLEUM, fulldata))
+#plot(rep_percent ~ NUCLEAR, fulldata, main = "Scatterplot for REPUBLICAN VOTES ~ NUCLEAR")
+#abline(lm(rep_percent ~ PETROLEUM, fulldata))
 
-plot(rep_percent ~ WIND, fulldata, main = "Scatterplot for REPUBLICAN VOTES ~ WIND")
-abline(lm(rep_percent ~ PETROLEUM, fulldata))
+#plot(rep_percent ~ WIND, fulldata, main = "Scatterplot for REPUBLICAN VOTES ~ WIND")
+#abline(lm(rep_percent ~ PETROLEUM, fulldata))
 ```
 
 **III. ANALYSIS**
+We are interested to see how energy, a specific sector of an economy, can affect the total GDP. Especially since From our two preliminary models, we have concluded that total energy consumption and electricity production predictors are significant predictors of the US total GDP.
 
 **A. Preliminary Model 1: GDP Growth ~ Total Energy Consumption by state**
-
-After we create the model and look at the summary, we see that a state's energy consumption appears to be an extremely significant predictor of the state's GDP. With this predictor alone we get an R$^2$ value of 0.64, and the p-value for the energy consumption predictor is 2.31e-12.
+Our first model looks at how total energy consumption can influence the total GDP. We wanted to look at the total energy consumption per state to see how much of energy demand we have for each state. After we create the model and look at the summary, we see that a state's energy consumption appears to be an extremely significant predictor of the state's GDP. With this predictor alone we get an R$^2$ value of 0.64, and the p-value for the energy consumption predictor is 2.31e-12.
 ```{r}
 GDPcon <- lm(total_GDP ~ consumption_Tbtu, fulldata)
 summary(GDPcon)
 ```
-
 ##BOXCOX
 After creating the model, our first step is to determine whether the response (total GDP) needs to be transformed. The boxcox() function plot tells us that transformation is necessary, since the confidence interval for $\lambda$ is centered at 0.2 and does not contain 1. For convenience and consistency, we use  $\lambda$ = 0 and log-transform the response.
 ```{r}
-boxcox(GDPcon, lambda=seq(-0.25,0.75,by=0.05),plotit=T)
-GDPcon_trans <- lm(log(total_GDP) ~ consumption_Tbtu, fulldata) 
-sumary(GDPcon_trans)
+# boxcox(GDPcon, lambda=seq(-0.25,0.75,by=0.05),plotit=T)
+# GDPcon_trans <- lm(log(total_GDP) ~ consumption_Tbtu, fulldata)
+# sumary(GDPcon_trans)
 ```
-
 ##DIAGNOSTICS
-Even for the transformed data, we see that the plot of the residuals is not very random, with the largest fitted values having extremely high or low residuals. To check for normality, we look at a QQ plot of the residuals. There is some long-tailed distribution, but not as bad as when we plotted the QQ plot with the untransformed data, which had a long-tailed distribution. The Shapiro-Wilk test demonstrates that the data is now normal, versus the test's highly significant p-value using the untransformed data. (Faraway 75-81)
+Even for the transformed data, we see that the plot of the residuals is not random, with the largest fitted values having extremely high or low residuals. To check for normality, we look at a QQ plot of the residuals. There is some long-tailed distribution, but not as bad as when we plotted the QQ plot with the untransformed data, which had a long-tailed distribution. The Shapiro-Wilk test demonstrates that the data is now normal, in contrast with the test's highly significant p-value using the untransformed data. (Faraway 75-81)
 ```{r}
-plot(GDPcon_trans)
-shapiro.test(residuals(GDPcon_trans))
+#plot(GDPcon_trans)
+#shapiro.test(residuals(GDPcon_trans))
 ```
+Obsservation 33 (New York) and 44 (Texas) are leverage points, influential points, and outliers. 
 
-Furthermore, it appears that 33 (New York) and 44 (Texas) are leverage points, influential points, and outliers.
-
-Removing Texas from the model significantly improves the R$^2$ value for the model and drastically increases the significance of the consumption_Tbtu predictor. Therefore, Texas is an outlier and an influential point.
+Removing New York from the model significantly improves the R$^2$ value for the model and drastically increases the significance of the consumption_Tbtu predictor; the same observations are true when we remove Texas.
 ```{r}
 fulldata[33,]#new york
 GDPcon_trans_33 <- lm((total_GDP)^(0.2) ~ consumption_Tbtu, fulldata[-33,])
@@ -145,21 +142,11 @@ sumary(GDPcon_trans_44)
 
 **Preliminary Model 2: total GDP ~ Energy production source by type for each state**
 
-Our second model looks at how energy production by type could be a predictor of gross domestic product. First, we want to see if we need to transform our response variable using the boxcox(). Boxcox() plot suggests that we transform our response variable by taking its log. 
+Our second model looks at how energy production by type could be a predictor of gross domestic product. We again transformed our response variable by taking its log. With our second model, we want to find which energy production by type are significant predictors for state GDP. Setting GDP as response and energy production types as predictors, we were able to conclude that solar, nuclear, and natural gas are the significant predictors. However, the $R^2$ value is significantly low.
 ```{r}
-GDPpro <- lm(total_GDP ~ NUCLEAR + COAL+ NATURAL.GAS + PETROLEUM + HYDRO + GEOTHERMAL + SOLARPV + WIND + BIOMASS_OTHER, fulldata)
-
-# boxcox 
-bc <- boxcox(GDPpro, lambda=seq(-0.5,0.5,by=0.05), plotit = T) 
-```
-With our second model, we want to find which energy production by type are significant predictors for state GDP. Setting GDP as response and energy production types as predictors, we constructed a model with all energy type. Then, we ran a step regression model. Just looking at the energy production types as predictors. We find that nuclear, natural gas, and solar energy are significant predictors of GDP.
-```{r}
-# linear model with renewable energy source by production type and total energy consumption as predictors
+# linear model 2
 GDPpro_log <- lm(log(total_GDP) ~ NUCLEAR + COAL+ NATURAL.GAS + PETROLEUM + HYDRO + GEOTHERMAL + SOLARPV + WIND + BIOMASS_OTHER, fulldata)
-summary(GDPpro_log)
-
-#step()
-step(GDPpro_log)
+# step(GDPpro_log)
 GDPpro_log_step <- lm(formula = log(total_GDP) ~ NUCLEAR + COAL + NATURAL.GAS + 
     PETROLEUM + HYDRO + SOLARPV + WIND, data = fulldata)
 summary(GDPpro_log_step)
@@ -171,8 +158,7 @@ Moving forward, we wanted to construct a model that predicts GDP with both total
 We again log-transform the response (GDP_nt --> GDPfull) after viewing the boxcox() plot.
 ```{r}
 GDP_nt <-lm(total_GDP ~ NUCLEAR + COAL+ NATURAL.GAS + PETROLEUM + HYDRO + GEOTHERMAL + SOLARPV + WIND + BIOMASS_OTHER + consumption_Tbtu, fulldata)
-bc <- boxcox(GDP_nt, lambda=seq(-0.5,0.5,by=0.05), plotit = T) 
-
+# bc <- boxcox(GDP_nt, lambda=seq(-0.5,0.5,by=0.05), plotit = T) 
 GDPfull <-lm(log(total_GDP) ~ NUCLEAR + COAL+ NATURAL.GAS + PETROLEUM + HYDRO + GEOTHERMAL + SOLARPV + WIND + BIOMASS_OTHER + consumption_Tbtu, fulldata)
 anova(GDPfull, GDPpro_log)
 ```
@@ -183,7 +169,8 @@ GDPfull_step <- lm(formula = log(total_GDP) ~ NUCLEAR + SOLARPV + consumption_Tb
     data = fulldata)
 summary(GDPfull_step)
 ```
-Our stepwise regression model indicates that nuclear energy production, solar energy production, and total energy consumption are the best predictors, with some caveats (see Discussion).
+Our stepwise regression model indicates that nuclear energy production, solar energy production, and total energy consumption are the best predictors. It suggests that an increase in total energy consumption leads to an increase in the total GDP, which intuitively makes sense. Yet, what really caught our attention is the fact that for every one percent increase in net electricity produced by nuclear and/or solar energy, there is an increase in the total GDP. In the context of our electricity production dataset, which measures the percentage of net electricity generated with the given production method, our linear model suggests that shifting towards nuclear and solar energy production type generated a greater increase in the total GDP produced by state. However, there are some caveats to consider (see Discussion). 
+
 ```{r}
 #anova
 anova(GDPfull, GDPfull_step)#reduced is fine
@@ -219,7 +206,7 @@ We construct a model matrix on the full model to compute correlation coefficient
 GDPfullMat<-model.matrix(GDPfull)
 (cormat <- cor(GDPfullMat[-1,-1])) #get rid of intercept
 ```
-Interestingly, the highest correlation coefficients come from SOLARPV and GEOTHERMAL (-0.696) as well as WIND and NATURAL.GAS (-0.461). It is not immediately clear why these predictors in particular are correlated. Surprisingly, COAL and NATURAL.GAS have a negative relationship, with a coefficient of -0.497, but this could make sense if a state is dependent on fracking (a process that extracts natural gas) but also coal production, which in some places are in direct competition with one another 
+Interestingly, the highest correlation coefficients come from SOLARPV and GEOTHERMAL (-0.696) as well as WIND and NATURAL.GAS (-0.461). It is not immediately clear why these predictors in particular are correlated. Surprisingly, COAL and NATURAL.GAS have a negative relationship, with a coefficient of -0.497 (see "Results and Discussion".)
 
 We then compute the condition numbers and variance inflation factors (VIFs) for our *stepped* model.
 ```{r}
@@ -227,18 +214,19 @@ We then compute the condition numbers and variance inflation factors (VIFs) for 
 vif(GDPfull_step)
 ```
 We see that none of the VIFs for the 3 selected predictors from the stepwise regression are large, since they are very close to 1. Thus, we conclude that collinearity isn't a significant issue for our stepped model.
+
 ## Large leverage points:
 ```{r}
-hatv1 <- hatvalues(GDPfull_step)
-p <- sum(hatv1)
-n <- 51
-2*p/n
-
-rev(sort(hatv1))
-fulldata[44,]
-fulldata[5,]
-fulldata[29,]
-fulldata[30,]
+# hatv1 <- hatvalues(GDPfull_step)
+# p <- sum(hatv1)
+# n <- 51
+# 2*p/n
+# 
+# rev(sort(hatv1))
+# fulldata[44,]
+# fulldata[5,]
+# fulldata[29,]
+# fulldata[30,]
 ```
 Texas, California, Nevada, and New Hampshire are significant leverage points because they exceed the critical value of 2p/n = 0.157.
 
@@ -246,10 +234,6 @@ Texas, California, Nevada, and New Hampshire are significant leverage points bec
 ```{r}
 stud <- rstudent(GDPfull_step)
 stud[which.max(abs(stud))]
-
-qt(0.05/(n*2),n-p)
-
-rev(sort(abs(stud)))
 ```
 Texas is an outlier because it exceeds the Bonferroni critical value.
 
@@ -257,7 +241,6 @@ Texas is an outlier because it exceeds the Bonferroni critical value.
 ```{r}
 cook <- cooks.distance(GDPfull_step)
 halfnorm(cook, ylab="Cook's Distances")
-
 fulldata[44,] #Texas
 fulldata[30,] #New Hampshire
 ```
@@ -274,40 +257,37 @@ Removing Texas greatly increases the R$^2$ value, from 0.63 to 0.73. Interesting
 ## Analysis on Outliers, Leverage Points, Influential Points
 ```{r}
 #plotting NUCLEAR
-ggplot(data = fulldata, mapping = aes(x = reorder(STATE, NUCLEAR), y=NUCLEAR)) + 
+ggplot(data = fulldata, mapping = aes(x = reorder(STATE, NUCLEAR), y=NUCLEAR, fill=party)) + scale_fill_manual(values=c("#0077b6", "#F8766D"))+
   geom_bar(stat = "identity") + coord_flip()+
   labs(x="STATE", y="Nuclear Energy Production (%)")
   ggtitle("NUCLEAR")
 
 #plotting SOLAR
-ggplot(data = fulldata, mapping = aes(x = reorder(STATE, SOLARPV), y=SOLARPV)) + 
+ggplot(data = fulldata, mapping = aes(x = reorder(STATE, SOLARPV), y=SOLARPV, fill=party)) + scale_fill_manual(values=c("#0077b6", "#F8766D"))+
   geom_bar(stat = "identity") + coord_flip()+
   labs(x="STATE", y="SOLAR Energy Production (%)")
   ggtitle("SOLAR")
   
 #plotting Consumption
-ggplot(data = fulldata, mapping = aes(x = reorder(STATE, consumption_Tbtu), y=consumption_Tbtu)) + 
+ggplot(data = fulldata, mapping = aes(x = reorder(STATE, consumption_Tbtu), y=consumption_Tbtu, fill=party)) + scale_fill_manual(values=c("#0077b6", "#F8766D"))+
   geom_bar(stat = "identity") + coord_flip()+
   labs(x="STATE", y="Total Energy Consumption")
   ggtitle("Total Energy Consumption ($)")
+
 ```
-Sarah--
-Plotting the graphs for the significant variables, we see that the outliers, influential points, and leverage points calculated above are visible in the plots of GDP against significant predictors.
+Plotting the graphs for the significant variables, we see that the outliers, influential points, and leverage points calculated above are visible in the plots of GDP against significant predictors. Nuclear energy and solar energy are statistically significant predictors of total GDP. However, as seen from the graphs above, there is a high variability within these variables. About a half of the states have not implemented these as sources of electricity productions, which brings concerns about how accurately our model can predict the total GDP based on only these two predictors. However, we are well aware that there are many other factors that contributes to the total GDP. Our model may not be the best model to predict the total GDP, but it still demonstrates an important trend that shifting towards nuclear and solar energy production type might bring a positive increment in total GDP.
 
--> look at the consumption data for these states and see what they have to say. 
--> inhibits our predictive powers in our model, however, low r squared makes sense because we need lots of other variables to measure GDP. lots of other variables (not high r square) 
-
-##Mitigating problems with the error
+##Mitigating problems with the error (non-constant variance)
 ```{r}
 #insert residuals --fitted plot for full model
 ```
 
 We chose to refit the full model using the Huber method, in order to down-weight extreme observations without being forced to remove them. We want to be able to keep all 51 state observations in the model,since n = 51 is a relatively small number of observations and since we intend to make conclusions about United States states as a whole.
+
 ```{r}
 rlmGDPfull <- rlm(log(total_GDP)~ NUCLEAR + COAL+ NATURAL.GAS + PETROLEUM + HYDRO + GEOTHERMAL + SOLARPV + WIND + BIOMASS_OTHER + consumption_Tbtu, data = fulldata)
 summary(rlmGDPfull)
-summary(GDPfull)
-
+#summary(GDPfull)
 wts <- rlmGDPfull$w
 names(wts) <- row.names(fulldata)
 head(sort(wts),12) #weighting Texas a LOT less (0.3); WA less, NY/Vermont 0.6ish
@@ -342,10 +322,12 @@ rlmGDPreduc_Al <-rlm(log(total_GDP) ~ NUCLEAR + SOLARPV + consumption_Tbtu, full
 summary(rlmGDPreduc_Al)
 ```
 
+The question that drove our linear modeling process was whether looking at a specific sector of economy can provides us some insights into the total GDP. From our linear model, we were able to conclude that there is a positive correlation between the total GDP produced per state and total energy consumption, nuclear energy, and solar energy production types. When we tried to predict a state's GDP with our linear model, however, we realized our model does not perform the best with predctions. 
 
+What we were able to conclude, on the other hand, was the trend that shifting towards nuclear and solar energy types than other energy production types--since a percent increase in these variables mean a percent decrease in other production types--may bring more statistically significant, positive impact on the total GDP. However, we still have to take into considerations that we are only looking at the impact of an energy sector to the total GDP from a single year, and that not all states implement nuclear and solar energy as their main electricity production source.
 
-*Final Model Extension: Political Affiliations ~ Energy production source by type for each state* 
-We are also interested in energy production by type (i.e. Solar, wind, petroleum) as predictors for political affiliation. In this case, we can construct models with our breakdown of energy types by state as predictors and the percentage of voters who voted Republican and who voted Democrat. 
+*Full Model Extension: Political Affiliation ~ Energy production source by type* 
+We also wanted to look at energy production by type (i.e. Solar, wind, petroleum) as predictors for political affiliation. In this case, we can construct models with our breakdown of energy types by state as predictors and the percentage of voters who voted Republican and who voted Democrat. 
 
 Below is a model with percentage of democratic voters as a response and energy types as predictors. 
 ```{r}
@@ -394,27 +376,26 @@ summary(stepRepMdl)
 ```
 Removing SOLARPV and BIOMASS_OTHER shows that our R-squared value has increased, and we now see all of our predictors are significant at the 5% level or better. 
 
-## Model Diagonostics
+## Model Diagnostics
 We can use the plot function to look at our residuals and check for leverage points. We can conduct further analysis if necessary. 
 ```{r}
 plot(stepRepMdl)
+shapiro.test(residuals(stepRepMdl))
 ```
-Using the plot function, we see that our residuals seem mostly centered around zero, and we do not see evidence of large leverage points that surpass the cook's distance interval, however we see a few points that are close, so we conduct explicit analysis below. We additionally see from our QQ plot that our residuals largely follow a normal distribution. 
+Using the plot function, we see that our residuals seem mostly centered around zero, and we do not see evidence of large leverage points that surpass the cook's distance interval, however we see a few points that are close, so we conduct explicit analysis below. We additionally see from our QQ plot that our residuals largely follow a normal distribution. Our model also passes the Shapiro Wilk test, with a high p-value. Therefore, we fail to reject the null hypothesis that our residuals follow a normal distribution. 
 
 ## Large leverage points.
-We can assess for large leverage points explicitly following the same method as above. 
+We can assess for large leverage points explicitly following the same method as above in the GDP model. 
 ```{r}
 hatv2 <- hatvalues(stepRepMdl)
 p <- sum(hatv2)
 n <- 51
 2*p/n
 
-rev(sort(hatv1))
-fulldata[44,2]
-fulldata[5,2]
+head(rev(sort(hatv2)))
 
 ```
-Texas and California are significant leverage points because they exceed the critical value of 2p/n = 0.313.
+We see a number of potential leverage points that exceed our threshold value of 0.313. Namely, Hawaii, Nevada, Washington D.C., Iowa and Vermont exceed this threshold. Since the leverage points do not necessarily represent deviations from the trend of the model, we do not remove them here, but we do check for outliers and more broad influential points. 
 
 ## Outliers
 ```{r}
@@ -422,8 +403,7 @@ stud2 <- rstudent(stepRepMdl)
 stud2[which.max(abs(stud2))]
 
 qt(0.05/(n*2),n-p)
-
-rev(sort(abs(stud2)))
+# rev(sort(abs(stud2)))
 ```
 Based on the Bonferroni critical value, we do not see any significant outliers. Washington has the largest absolute studentized value at 2.298, which does not exceed the Bonferroni critical value of 3.538.
 
@@ -431,7 +411,6 @@ Based on the Bonferroni critical value, we do not see any significant outliers. 
 ```{r}
 cook2 <- cooks.distance(stepRepMdl)
 halfnorm(cook2, ylab="Cook's Distances")
-
 fulldata[9,] #Washington D.C.
 fulldata[12,] #Hawaii
 ```
@@ -451,7 +430,6 @@ predict(repMdlPredict,testStatePolit,interval = "prediction")
 fulldata[n,]$rep_percent
 ```
 
-
 ##Limitation: Collinearity
 We've already looked at correlation coefficients between predictors for the full GDP model, finding that there is a negative relationship between coal and natural gas.
 
@@ -459,10 +437,10 @@ Beyond correlation coefficients for all predictors, we also want to look for evi
 ```{r}
 vif(stepRepMdl)
 ```
-Our VIF calculation indicates evidence of a fairly high amount of collinearity. Coal and natural gas, in particular show evidence of collinearity, which might make sense because these two predictors tend to hold higher proportions of electricity consumption than others. Therefore, an increase or decrease in either may correlate an increase or decrease overall in electricity consumption by state. However, removing one of these variables decreases the overall performance of the model. 
+Our VIF calculation indicates evidence of a fairly high amount of collinearity. Coal and natural gas, in particular show evidence of collinearity, as noted in our correlation matrix (see "Full Model 1"). However, removing either one of these variables decreases the overall performance of the model. 
 
 ##Principal Component Regression
-We are also interested in reducing dimensionality and effects of collinearity in our model. We can perform a principal components regression (PCR) which makes use of principal component analysis (PCA) to construct a model based on "components" that explain some amount of variability in the data, comprised of linear combinations of our predictors. 
+We are also interested in reducing dimensionality and effects of collinearity in our model. We perform a principal components regression (PCR) which makes use of principal component analysis (PCA) to construct a model based on "components" that explain some amount of variability in the data, comprised of linear combinations of our predictors. 
 ```{r}
 # Constructing a PCR model:
 set.seed (123)
@@ -474,29 +452,34 @@ Plotting our results:
 ```{r}
 validationplot(pcr_model,val.type = "R2")
 ```
+We see that using 5 principal components reduces our root mean squared error, suggesting that this could be a desirable alternative to the OLS model for future work, since this would incorporate multiple predictor variables into a smaller number of linearly-combined components. 
 
 
+**IV. RESULTS AND DISCUSSION**
+There was substantial collinearity present in our predictor variables, with some interesting relationships. COAL and NATURAL GAS were negatively correlated, which could make sense if a state is dependent on fracking (a process that extracts natural gas) but also coal production, which in some places are in direct competition with one another. Alternatively, this relationship may occur because coal and natural gas tend to hold higher proportions of electricity consumption than other forms of electricity production. Therefore, an increase or decrease in either may correlate an increase or decrease overall in electricity consumption by state.
 
-We conclude that electricity production type can have moderate predictive power for politial affiliation in a given state. In particular, we find that predictions of Republican vote percentages are better than expected. However, we do see evidence of collinearity amongst our predictors, and it is unclear if we can meaningfully interpret the coefficient values of our ordinary least squares model. Still, as a proof of concept analysis to test the influence of the energy sector on political outcomes, we see that a susbstantial relationship exists. 
+While collinearity was mitigated through stepwise regression methods, we cannot be sure that the most useful predictors weren't inadvertently taken out through the stepwise algorithm. We used stepwise regression as an easy way to remove non-significant predictor variables for all of our models, but this was done at the cost of potentially missing important predictors and created smaller models than is potentially ideal. We note that Faraway discourages the use of stepwise and backwards regression except in the case of simple model comparisons or "highly structured heirarchical [sic] models" (Faraway 153), and so while we use ANOVA to determine how much faith we can have in our stepwise models, we cannot say with confidence that our stepwise models are the best variable reduction option. For future research, we recommend utilizing shrinkage methods more fully, such as PCR (which we did incorporate for our political affiliation model) and PLS.
 
-**IV. Results and Discussion** 
-*Full Model 1: GDP ~ energy production and consumption*
-In summary, we found that model with GDP as a response and energy production and consumption variables as predictors had a fair amount of predictive power.
+We found that the model with log(GDP) as a response and both electricity energy production and consumption variables as predictors had the best predictive power, compared to either production or consumption variables by themselves. However, since the response is log-transformed, this makes direct interpretation of our model more difficult. We have to exponentiate our coefficients:
+```{r}
+coef(GDPfull_step)
+exp(coef(GDPfull_step))
+```
+For instance, we see from the above exponentiated coefficients that a 1-percent increase in nuclear production results in a 1.02 billion dollar increase in GDP, while for solar it is a 1.06 billion dollar increase.
 
+For our GDP model, we found that Texas is a problematic observation, since it is a leverage point, influential point, and outlier. This is because the state consumes *by far* the most energy relative to its GDP. After removing Texas from our GDP model post-stepwise regression, the model fit was far better, and the p-values of the predictors changed substantially. However, unlike datasets that involve distinct datapoints that do not interact with each other in a larger system (such as patients, a collection of chemical isomers, or types of tea), we wanted to make conclusions about not only US states in isolate, but also the United States as a whole. Thus, we were hesitant to remove Texas permanently from our dataset, even if we did sacrifice achieving the best fit for our model.
 
-Extreme observations:
-Texas is a leverage point, influential point, and outlier, because the state consumes *by far* the most energy relative to its GDP. After removing Texas from our GDP model post-stepwise regression
+Even after transforming GDP, our residuals were still not random. This is why we implemented the Huber regression method, so that the influence of extreme observations (such as Texas!) non-random errors . Interestingly, even though Washington (observation # 48) does not show up on any of our diagnostic plots, the Huber method significantly downweights this observation. This may be because Washington uses no solar energy for electricity but uses the most hydroelectric power (66%) out of any state, and has unusually high GDP for a state (618B, vs the median of 242B).
 
-*Full Model 2
+For our political affiliation model, were able to conclude that electricity production type can have moderate predictive power for political affiliation in a given state. In particular, we find that predictions of Republican vote percentages are better than expected and are in fact more accurate than our GDP model, to our surprise. It is interesting that total consumption is not a significant predictor, since it implies that even highly Democratic states (such as California) use significant amounts of energy, calling attention to the fact that energy (over)use is a bipartisan issue. 
 
-Provide inferences about the questions of interest and discussion. Limitations of study and 
-
-**V: Limitations and Conclusion**Describe any limitations of your study and how they might be overcome in future research and provide brief conclusions about the results of your study
-
-A main limitation of this analysis stemmed from a lack of data availability. While finding total GDP breakdowns and 2020 election outcomes by US state was straightforward, we were unable to find energy production data that was not limited merely to electricity energy production by percent shares. This dataset also combined energy outputs attributed to biomass *and* other forms of energy production into one variable ("BIOMASS_OTHER"), which made interpretation of the importance of this variable somewhat more difficult, since in fact a few states (such as Maine) actually produce a significant portion of their energy through biomass burning.
-
-Furthermore, we were only able to find *total* energy consumption data, and only for the year 2018--all our other datasets were from 2020. Datasets that broke down energy consumption by energy type (renewable/non-renewable etc.) alluded us, even after extensive searching on the Department of Energy website.
-
+More so than in our GDP model, since more energy production predictors are included, collinearity is more of a problem, and so it is unclear if we can meaningfully interpret the coefficient values of our ordinary least squares model (even though in this case, our response was not log-transformed). Still, as a proof of concept analysis to test the influence of the energy sector on political outcomes, we see that an arguably significant relationship exists between political affiliation and types of energy production.
 
 
+**V. CONCLUSION**
 
+A main limitation of this analysis stemmed from a lack of data availability. While finding total GDP breakdowns and 2020 election outcomes by US state was straightforward, we were unable to find energy production data that was not limited merely to electricity energy production by percent shares. This data set also combined energy outputs attributed to biomass *and* other forms of energy production into one variable ("BIOMASS_OTHER"), which made interpretation of the importance of this variable somewhat more difficult, since in fact a few states (such as Maine) actually produce a significant portion of their energy through biomass burning. Furthermore, we were only able to find *total* energy consumption data, and only for the year 2018--all our other data sets were from 2020. Datasets that broke down energy consumption by energy type (renewable/non-renewable etc.) eluded us, even after extensive searching on the Department of Energy website. This issue might be overcome in future research through compiling individual state data sets that may not otherwise be easily available in a 51-state/DC data set.
+
+A more conceptual limitation of our extension model is that political affiliation trends don't vary primarily by state, but rather by population density (in other words, cities are overwhelmingly Democratic, while rural areas are primarily Republican). Thus, future research might include similar predictor/response variables but broken down to the county-level, in order to make more meaningful conclusions about relationships between political outcomes and energy use/production.
+
+In conclusion, nuclear and solar production along with total energy consumption ended up being the most significant variables for predicting log(total GDP) of US states. Predictive power of our model was fairly high, but removing outlier states, especially Texas, improved our model drastically. Some influential observations such as Washington were hidden and only 'discovered' through the Huber method that was implemented as an error mitigation technique. For our political affiliation model, energy production variables ended up being important predictors, while energy consumption was not, and ended up having surprising predictive power, albeit with significant collinearity problems. 
