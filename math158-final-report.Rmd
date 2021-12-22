@@ -8,7 +8,7 @@ output:
   html_document:
     df_print: paged
 ---
-**ABSTRACT: ** 
+**ABSTRACT: **
 This project explores how one sector of the U.S. economy can impact broader economic and societal outcomes. With an increasing focus on the energy production and consumption, as well heightened support for a global transition to renewable energy sources, we focus on how the U.S. energy sector affects high-level variables. We use the source of electricity produced in a state and that state's total energy consumption to predict total state GDP, as well as political affiliation. Here we construct three models to explore these questions. First, we find that total energy consumption and a state's total GDP are highly correlated, suggesting unsurprisingly that wealthier states consume more energy. Second, we construct a model with GDP as a response and electricity production source and total energy consumption as predictors, finding that solar and nuclear are significant predictors, along with total consumption. Finally, we construct a model with percentage of votes in a state going to Republican or Democrat candiates in the U.S. 2020 presidential election as a response, finding that nuclear, coal, natural gas, petroleum, geothermal and wind are significant predictors. We generally conclude that energy can have a moderate level of predictive impact on broader economic and political shifts; however, our modeling is limited by lack of information, collinearity, and nonuniform distributions of electricity generation type in U.S. states. 
 
 
