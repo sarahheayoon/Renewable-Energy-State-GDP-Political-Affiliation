@@ -1,5 +1,5 @@
 # Statistical-Linear-Model
-# Title: Predicting United States GDP and Political Affiliation Using Energy Data 
+# Predicting State GDP and Political Affiliation Using Renewable Energy Data 
 
 
 # ABSTRACT
