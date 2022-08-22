@@ -1,7 +1,8 @@
 # Predicting State GDP and Political Affiliation With Multivariate Statistical Linear Model
-Team: Kat Gelsey, Paul McKinley, and Sarah Kim
+
 ## Abstract
 This project explores the hidden consequences of the growing U.S energy consumption and renewable energy productions. We are interested to see how much a sector of the U.S. economy can impact broader economic and societal outcomes. With an increasing focus on the energy production and consumption, as well heightened support for a global transition to renewable energy sources, we focus on how the U.S. energy sector affects high-level variables. Here is the brief summary of our findings: (1) Total energy consumption and a state's total GDP are highly correlated. (2) Solar and nuclear energy productions are significant predictors of a state's total GDP. (3) Nuclear, coal, natural gas, petroleum, geothermal and wind are significant predictors for the U.S. 2020 presidential election. We generally conclude that energy can have a great predictive impact on broader economic and political shifts; however, we also recognize that our predictive models can be further improved by addressing collinearity and other confounding variables, which will be discussed in the report.
+<img width="899" alt="Screen Shot 2022-08-22 at 4 15 04 PM" src="https://user-images.githubusercontent.com/89557209/186035166-4a55f5f8-5429-46e0-ba45-2a85fb7b5b03.png">
 
 ## Research Methods
 The objective of this project is to analyze how one sector of the U.S. economy (i.e. energy) can influence broader economic and societal outcomes. We built  various linear models with energy production and consumption in each state as independent variables and total annual GDP and 2020 election votes as response variables. We aim to answer following questions:
@@ -35,6 +36,8 @@ https://neo.ne.gov/programs/stats/inf/120.htm
 
 (4) To measure political affiliation in the U.S. with one response variable, we use data from the U.S. 2020 presidential election. Here we use data collected by Cook Political Report, exploring percentages of votes in a given state that went to the Republican or Democratic candidate. We do not explore independent candidates because of the small proportion of votes they comprise. We note that percentage of votes for each candidate is only one representation of political affiliation. 
  https://www.census.gov/newsroom/press-releases/2021/2020-presidential-election-voting-and-registration-tables-now-available.html 
+ 
+ + edited (Aug 2022) I also added a dataset to include metrics to rank states by green energy production to do a further analysis: https://www.consumeraffairs.com/solar-energy/greenest-states-in-us.html#greenest-states-ranked
 
 ## Discussions 
 ### Addressing Collinearity in total GDP ~ energy production + consumption model:
