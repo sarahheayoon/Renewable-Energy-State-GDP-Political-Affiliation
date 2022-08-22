@@ -1,13 +1,10 @@
 # Predicting State GDP and Political Affiliation With Multivariate Statistical Linear Model
 
 ## Abstract
-This project explores the hidden consequences of the growing U.S energy consumption and renewable energy productions. We are interested to see how much a sector of the U.S. economy can impact broader economic and societal outcomes. With an increasing focus on the energy production and consumption, as well heightened support for a global transition to renewable energy sources, we focus on how the U.S. energy sector affects high-level variables. 
+This project explores the hidden consequences of the growing U.S energy consumption and renewable energy productions. We are interested to see how much a sector of the U.S. economy can impact broader economic and societal outcomes. With an increasing focus on the energy production and consumption, as well heightened support for a global transition to renewable energy sources, we focus on how the U.S. energy sector affects high-level variables. Here is the brief summary of our findings: (1) Total energy consumption and a state's total GDP are highly correlated. (2) Solar and nuclear energy productions are significant predictors of a state's total GDP. (3) Nuclear, coal, natural gas, petroleum, geothermal and wind are significant predictors for the U.S. 2020 presidential election. We generally conclude that energy can have a great predictive impact on broader economic and political shifts; however, we also recognize that our predictive models can be further improved by addressing collinearity and other confounding variables, which will be discussed in the report.
 
-We used individual state's electricity production types and its total energy consumption to predict total state GDP as well as political affiliation. First, we learned that total energy consumption and a state's total GDP are highly correlated. Second, we constructed a model with GDP as a response and electricity production source and total energy consumption as predictors, finding that solar and nuclear are significant predictors, along with total consumption. Finally, we built a predictive model with percentage of votes going to Republican or Democrat candiates by state as explanatory variables, finding that nuclear, coal, natural gas, petroleum, geothermal and wind are significant predictors for the U.S. 2020 presidential election as a response. We generally conclude that energy can have a moderate level of predictive impact on broader economic and political shifts; however, our modeling can be further improved by addressing collinearity and nonuniform distributions of electricity generation type in U.S. states. 
-
-## Introduction
-
-The objective of this project is to analyze how one sector of the U.S. economy (i.e. energy) can influence broader societal outcomes, such as economic growth and elections. In this case, we are interested in building models based on energy supply (for electricity) in each state, to see what role the energy sector may have on a broader outcome. This report addresses the following questions:
+## Research Methods
+The objective of this project is to analyze how one sector of the U.S. economy (i.e. energy) can influence broader economic and societal outcomes. We built  various linear models with energy production and consumption in each state as independent variables and total annual GDP and 2020 election votes as response variables. We aim to answer following questions:
 
 (1) Is electricity production type correlated with total GDP per state?
 (2) Which sources of electricity production is most significant in predicting GDP?
@@ -36,7 +33,6 @@ https://www.statista.com/statistics/248023/us-gross-domestic-product-gdp-by-stat
 https://neo.ne.gov/programs/stats/inf/120.htm 
 <img width="639" alt="Screen Shot 2022-08-22 at 12 47 08 PM" src="https://user-images.githubusercontent.com/89557209/186005972-1bfabf97-d9b5-4c0b-a0ee-83e2690ff4f4.png">
 
-
 (4) To measure political affiliation in the U.S. with one response variable, we use data from the U.S. 2020 presidential election. Here we use data collected by Cook Political Report, exploring percentages of votes in a given state that went to the Republican or Democratic candidate. We do not explore independent candidates because of the small proportion of votes they comprise. We note that percentage of votes for each candidate is only one representation of political affiliation. 
  https://www.census.gov/newsroom/press-releases/2021/2020-presidential-election-voting-and-registration-tables-now-available.html 
 
@@ -48,7 +44,6 @@ While collinearity was mitigated through stepwise regression methods, we cannot 
 
 We found that the model with log(GDP) as a response and both electricity energy production and consumption variables as predictors had the best predictive power, compared to either production or consumption variables by themselves. However, since the response is log-transformed, this makes direct interpretation of our model more difficult.ease.
 
-
 For our GDP model, we found that Texas is a problematic observation, since it is a leverage point, influential point, and outlier. This is because the state consumes *by far* the most energy relative to its GDP. After removing Texas from our GDP model post-stepwise regression, the model fit was far better, and the p-values of the predictors changed substantially. However, unlike datasets that involve distinct datapoints that do not interact with each other in a larger system (such as patients, a collection of chemical isomers, or types of tea), we wanted to make conclusions about not only US states in isolate, but also the United States as a whole. Thus, we were hesitant to remove Texas permanently from our dataset, even if we did sacrifice achieving the best fit for our model.
 
 Even after transforming GDP, our residuals were still not random. This is why we implemented the Huber regression method, so that the influence of extreme observations (such as Texas!) non-random errors . Interestingly, even though Washington (observation # 48) does not show up on any of our diagnostic plots, the Huber method significantly downweights this observation. This may be because Washington uses no solar energy for electricity but uses the most hydroelectric power (66%) out of any state, and has unusually high GDP for a state (618B, vs the median of 242B).
@@ -59,7 +54,6 @@ More so than in our GDP model, since more energy production predictors are inclu
 
 
 ## Conclusion
-
 A main limitation of this analysis stemmed from a lack of data availability. While finding total GDP breakdowns and 2020 election outcomes by US state was straightforward, we were unable to find energy production data that was not limited merely to electricity energy production by percent shares. This data set also combined energy outputs attributed to biomass *and* other forms of energy production into one variable ("BIOMASS_OTHER"), which made interpretation of the importance of this variable somewhat more difficult, since in fact a few states (such as Maine) actually produce a significant portion of their energy through biomass burning. Furthermore, we were only able to find *total* energy consumption data, and only for the year 2018--all our other data sets were from 2020. Datasets that broke down energy consumption by energy type (renewable/non-renewable etc.) eluded us, even after extensive searching on the Department of Energy website. This issue might be overcome in future research through compiling individual state data sets that may not otherwise be easily available in a 51-state/DC data set.
 
 A more conceptual limitation of our extension model is that political affiliation trends don't vary primarily by state, but rather by population density (in other words, cities are overwhelmingly Democratic, while rural areas are primarily Republican). Thus, future research might include similar predictor/response variables but broken down to the county-level, in order to make more meaningful conclusions about relationships between political outcomes and energy use/production.
