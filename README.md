@@ -1,5 +1,5 @@
 # Predicting State GDP and Political Affiliation With Multivariate Statistical Linear Model
-
+Team: Kat Gelsey, Paul McKinley, and Sarah Kim
 ## Abstract
 This project explores the hidden consequences of the growing U.S energy consumption and renewable energy productions. We are interested to see how much a sector of the U.S. economy can impact broader economic and societal outcomes. With an increasing focus on the energy production and consumption, as well heightened support for a global transition to renewable energy sources, we focus on how the U.S. energy sector affects high-level variables. Here is the brief summary of our findings: (1) Total energy consumption and a state's total GDP are highly correlated. (2) Solar and nuclear energy productions are significant predictors of a state's total GDP. (3) Nuclear, coal, natural gas, petroleum, geothermal and wind are significant predictors for the U.S. 2020 presidential election. We generally conclude that energy can have a great predictive impact on broader economic and political shifts; however, we also recognize that our predictive models can be further improved by addressing collinearity and other confounding variables, which will be discussed in the report.
 
