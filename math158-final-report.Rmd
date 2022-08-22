@@ -54,6 +54,7 @@ require(faraway)
 require(ggplot2)
 require(ggpmisc)
 require(pls)
+require(ggcorrplot)
 fulldata <-read.csv("Project Data/masterdata.csv")
 ```
 
@@ -73,6 +74,24 @@ ggplot(data = fulldata, mapping = aes(x = reorder(STATE, total_GDP), y=total_GDP
   labs(x="STATE", y="2020 Total US GDP (in billions of dollars)")
 ```
 From the first look, it seems like our response variables and the explanatory variables has some correlations.
+*Addressing Collinearity*:
+```{r}
+energy_data <-read.csv("Project Data/gdp_v_energy_production_by_type.csv")
+mdl1 <- lm(log(GDP_GROWTH) ~ NUCLEAR + COAL+ NATURAL.GAS + PETROLEUM + HYDRO + GEOTHERMAL + SOLARPV + WIND + BIOMASS_OTHER, energy_data)
+
+# check eigendecomposition of X-transpose-dot-X
+x1 <- model.matrix(mdl1)[,-1]
+e <- eigen(t(x1)%*% x1)
+sqrt(e$val[1]/e$val)
+
+corr <- round(cor(x1), 1)
+head(corr[, 1:9])
+
+ggcorrplot(corr)
+```
+
+
+
 *Explanatory variables ~ total GDP*:
 ```{r}
 # response variable GDP ~ some numerical variables of interest
