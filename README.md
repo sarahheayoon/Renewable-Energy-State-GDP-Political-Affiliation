@@ -35,6 +35,8 @@ https://neo.ne.gov/programs/stats/inf/120.htm
 
 (4) To measure political affiliation in the U.S. with one response variable, we use data from the U.S. 2020 presidential election. Here we use data collected by Cook Political Report, exploring percentages of votes in a given state that went to the Republican or Democratic candidate. We do not explore independent candidates because of the small proportion of votes they comprise. We note that percentage of votes for each candidate is only one representation of political affiliation. 
  https://www.census.gov/newsroom/press-releases/2021/2020-presidential-election-voting-and-registration-tables-now-available.html 
+ 
+ + edited (Aug 2022) I also added a dataset to include metrics to rank states by green energy production to do a further analysis: https://www.consumeraffairs.com/solar-energy/greenest-states-in-us.html#greenest-states-ranked
 
 ## Discussions 
 ### Addressing Collinearity in total GDP ~ energy production + consumption model:
