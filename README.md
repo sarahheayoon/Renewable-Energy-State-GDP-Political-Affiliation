@@ -1,7 +1,7 @@
 # Predicting State GDP and Political Affiliation With Multivariate Statistical Linear Model
 
 ## Abstract
-This report explores how one sector of the U.S. economy can impact broader economic and societal outcomes. With an increasing focus on the energy production and consumption, as well as heightened support for a global transition to renewable energy sources, we focus on how the U.S, energy sector affects a state's total GDP and a state's political affiliations. We concluded that renewable energy consumption/production has a moderate level of predictive impact on broader economic and political shifts.
+This report explores how one sector of the U.S. economy can impact broader economic and societal outcomes. With an increasing focus on the energy production and consumption, as well as heightened support for a global transition to renewable energy sources, we focus on how the U.S, energy sector affects a state's total GDP and political affiliations. We concluded that renewable energy consumption/production has a moderate level of predictive impact on broader economic and political shifts.
 
 <img width="899" alt="Screen Shot 2022-08-22 at 4 15 04 PM" src="https://user-images.githubusercontent.com/89557209/186035166-4a55f5f8-5429-46e0-ba45-2a85fb7b5b03.png">
 
