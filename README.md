@@ -1,11 +1,12 @@
 # Predicting State GDP and Political Affiliation With Multivariate Statistical Linear Model
 
 ## Abstract
-This project explores the hidden consequences of the growing U.S energy consumption and renewable energy productions. We are interested to see how much a sector of the U.S. economy can impact broader economic and societal outcomes. With an increasing focus on the energy production and consumption, as well heightened support for a global transition to renewable energy sources, we focus on how the U.S. energy sector affects high-level variables. Here is the brief summary of our findings: (1) Total energy consumption and a state's total GDP are highly correlated. (2) Solar and nuclear energy productions are significant predictors of a state's total GDP. (3) Nuclear, coal, natural gas, petroleum, geothermal and wind are significant predictors for the U.S. 2020 presidential election. We generally conclude that energy can have a great predictive impact on broader economic and political shifts; however, we also recognize that our predictive models can be further improved by addressing collinearity and other confounding variables, which will be discussed in the report.
+This report explores how one sector of the U.S. economy can impact broader economic and societal outcomes. With an increasing focus on the energy production and consumption, as well as heightened support for a global transition to renewable energy sources, we focus on how the U.S, energy sector affects a state's total GDP and a state's political affiliations. We concluded that renewable energy consumption/production has a moderate level of predictive impact on broader economic and political shifts.
+
 <img width="899" alt="Screen Shot 2022-08-22 at 4 15 04 PM" src="https://user-images.githubusercontent.com/89557209/186035166-4a55f5f8-5429-46e0-ba45-2a85fb7b5b03.png">
 
 ## Research Methods
-The objective of this project is to analyze how one sector of the U.S. economy (i.e. energy) can influence broader economic and societal outcomes. We built  various linear models with energy production and consumption in each state as independent variables and total annual GDP and 2020 election votes as response variables. We aim to answer following questions:
+We built  various linear models with energy production and consumption in each state as independent variables and total annual GDP and 2020 election votes as response variables. We aim to answer following questions:
 
 (1) Is electricity production type correlated with total GDP per state?
 (2) Which sources of electricity production is most significant in predicting GDP?
